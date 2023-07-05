@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  server:
+    container_name: "peq.nu-backend"
+    build: .
+    ports:
+      - 8081:8081

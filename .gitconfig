@@ -1,0 +1,4 @@
+#Freeze
+git update-index --assume-unchanged ./envs/current.env
+#Unfreeze
+git update-index --no-assume-unchanged ./envs/current.env
