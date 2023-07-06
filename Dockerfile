@@ -5,6 +5,6 @@ RUN go build -o ./server ./src/cmd/http/main.go
 
 FROM alpine:3.17
 WORKDIR /app
-COPY --from=build /app/envs ./envs
+COPY ./env/ ./env/
 COPY --from=build /app/server ./server
 ENTRYPOINT [ "./server" ]

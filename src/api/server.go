@@ -25,7 +25,7 @@ func Serve() {
 		log.Fatalf("Server port not found")
 	}
 
-	log.Printf("Start server at port %s with env '%s'.", port, os.Getenv(config.CURRENT_ENV))
+	log.Printf("Start server at port %s.", port)
 
 	port = ":" + port
 	http.ListenAndServe(port, r)

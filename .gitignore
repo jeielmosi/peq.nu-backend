@@ -15,6 +15,6 @@
 # vendor/
 
 #env files
-envs/*
-!envs/example/
-!envs/shared.env
+env/*
+!env/.keepfolder
+!env/.env

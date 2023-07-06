@@ -6,12 +6,13 @@ import (
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+	config "github.com/jei-el/vuo.be-backend/src/config"
 	"google.golang.org/api/option"
 )
 
 func getApp(envName string) (*firebase.App, error) {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile(os.Getenv(envName + "_FIREBASE_PATH"))
+	opt := option.WithCredentialsFile(os.Getenv(config.FIREBASE_PATH))
 
 	return firebase.NewApp(ctx, nil, opt)
 }
