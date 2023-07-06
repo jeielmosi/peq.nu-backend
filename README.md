@@ -5,6 +5,6 @@ A simple hash URL shotener backend using the pigeonhole principle for pontencial
 Create a Firebase Project and a Firestore database \
 Go to `https://console.firebase.google.com/project/{PROJECT-ID}/settings/serviceaccounts/adminsdk` \
 And generate new private key, put in `./env` folder with a name `firebase.json` \
-You can update the SERVER_PORT on `.env` file, *but make sure it's the same on* `docker-compose.yml` \
+You can update the SERVER_PORT on `.env` file, *but make sure it's the same on* `docker-compose.yml`
 ## Start your aplication
 run `sudo docker compose up --build` on a terminal
