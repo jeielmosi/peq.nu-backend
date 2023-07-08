@@ -2,7 +2,6 @@ package shorten_bulk
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"reflect"
 	"testing"
@@ -45,22 +44,22 @@ func TestGetOldest(
 	}
 
 	if !reflect.DeepEqual(res, exp) {
-		fmt.Println("result:")
+		log.Println("result:")
 		for key, val := range res {
 			if val == nil {
-				fmt.Println(key, ": nil")
+				log.Println(key, ": nil")
 				continue
 			}
-			fmt.Println(key, ":", types.NewShortenBulkFlattenDTO(*val))
+			log.Println(key, ":", types.NewShortenBulkFlattenDTO(*val))
 		}
 
-		fmt.Println("expected:")
+		log.Println("expected:")
 		for key, val := range exp {
 			if val == nil {
-				fmt.Println(key, ": nil")
+				log.Println(key, ": nil")
 				continue
 			}
-			fmt.Println(key, ":", types.NewShortenBulkFlattenDTO(*val))
+			log.Println(key, ":", types.NewShortenBulkFlattenDTO(*val))
 		}
 		t.Errorf("Test error at compare the get result")
 	}

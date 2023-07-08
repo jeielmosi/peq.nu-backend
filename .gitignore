@@ -17,4 +17,3 @@
 #env files
 env/*
 !env/.keepfolder
-!env/.env

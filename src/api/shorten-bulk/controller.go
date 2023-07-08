@@ -40,6 +40,7 @@ func (c *ShortenBulkController) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *ShortenBulkController) Get(w http.ResponseWriter, r *http.Request) {
+
 	hash := chi.URLParam(r, api_helpers.HashField)
 	mp, statusCode := c.service.Get(hash)
 

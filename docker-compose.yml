@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   server:
-    image: "peq.nu-prod"
+    image: "us-central1-docker.pkg.dev/peqnu-backend/serveless/peqnu-dev"
     build: .
+    environment:
+      - PORT=8080
     ports:
       - 8080:8080
