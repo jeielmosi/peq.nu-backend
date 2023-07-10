@@ -8,3 +8,6 @@ And generate new private key, put in `./env` folder with a name `firebase.json` 
 You can update the SERVER_PORT on `.env` file, **but make sure it's the same on** `docker-compose.yml`
 ## Start your aplication
 run `sudo docker compose up --build` on a terminal
+
+## Deploy
+**Notice that if you put any file at `.gitignore` or `.dockerignore` will be ignored on deploy image**
