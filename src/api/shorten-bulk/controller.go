@@ -3,7 +3,6 @@ package api_shorten_bulk
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -21,13 +20,15 @@ func (c *ShortenBulkController) Post(w http.ResponseWriter, r *http.Request) {
 	var body validators.URLBodyDto
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "Erro ao ler o corpo da requisição"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 	validate := validators.GetValidator()
 	err = validate.Struct(body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "URL inválida"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 
@@ -36,48 +37,33 @@ func (c *ShortenBulkController) Post(w http.ResponseWriter, r *http.Request) {
 	}
 	err = validate.Struct(params)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "Link personalizado inválido"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 
 	mp, statusCode := c.service.Post(params.Hash, body.URL)
-
-	w.WriteHeader(statusCode)
-	w.Header().Set("Content-Type", "application/json")
-	res, err := json.Marshal(mp)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatalf("Error happened in JSON marshal. Err: %s\n", err.Error())
-	}
-
-	w.Write(res)
+	api_helpers.ResponseJSON(&w, statusCode, &mp, nil)
 }
 
 func (c *ShortenBulkController) PostRandom(w http.ResponseWriter, r *http.Request) {
 	var body validators.URLBodyDto
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "Erro ao ler o corpo da requisição"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 	validate := validators.GetValidator()
 	err = validate.Struct(body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "URL inválida"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 
 	mp, statusCode := c.service.PostRandom(body.URL)
-
-	w.WriteHeader(statusCode)
-	w.Header().Set("Content-Type", "application/json")
-	res, err := json.Marshal(mp)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatalf("Error happened in JSON marshal. Err: %s\n", err.Error())
-	}
-
-	w.Write(res)
+	api_helpers.ResponseJSON(&w, statusCode, &mp, nil)
 }
 
 func (c *ShortenBulkController) GetStatus(w http.ResponseWriter, r *http.Request) {
@@ -87,19 +73,12 @@ func (c *ShortenBulkController) GetStatus(w http.ResponseWriter, r *http.Request
 	}
 	err := validate.Struct(params)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "Link personalizado inválido"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 	mp, statusCode := c.service.GetStatus(params.Hash)
-
-	w.WriteHeader(statusCode)
-	w.Header().Set("Content-Type", "application/json")
-	res, err := json.Marshal(mp)
-	if err != nil {
-		log.Fatalf("Error happened in JSON marshal. Err: %s\n", err.Error())
-	}
-
-	w.Write(res)
+	api_helpers.ResponseJSON(&w, statusCode, &mp, nil)
 }
 
 func (c *ShortenBulkController) Get(w http.ResponseWriter, r *http.Request) {
@@ -109,19 +88,12 @@ func (c *ShortenBulkController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 	err := validate.Struct(params)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		message := "Link personalizado inválido"
+		api_helpers.ResponseJSON(&w, http.StatusBadRequest, nil, &message)
 		return
 	}
 	mp, statusCode := c.service.Get(params.Hash)
-
-	w.WriteHeader(statusCode)
-	w.Header().Set("Content-Type", "application/json")
-	res, err := json.Marshal(mp)
-	if err != nil {
-		log.Fatalf("Error happened in JSON marshal. Err: %s\n", err.Error())
-	}
-
-	w.Write(res)
+	api_helpers.ResponseJSON(&w, statusCode, &mp, nil)
 }
 
 func (c *ShortenBulkController) Route(r *chi.Mux) {
@@ -130,7 +102,7 @@ func (c *ShortenBulkController) Route(r *chi.Mux) {
 	r.Get(fmt.Sprintf("/{%s}", api_helpers.HashField), c.Get)
 
 	r.Group(func(r chi.Router) {
-		r.Use(httprate.LimitByIP(10, time.Hour))
+		r.Use(httprate.LimitByIP(10, time.Minute))
 		r.Post("/", c.PostRandom)
 		r.Post(fmt.Sprintf("/{%s}", api_helpers.HashField), c.Post)
 	})

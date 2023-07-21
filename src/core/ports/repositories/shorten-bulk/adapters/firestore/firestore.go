@@ -137,7 +137,7 @@ func (f *ShortenBulkFirestore) PostSafe(
 	postSafe := func(ctx context.Context, tx *firestore.Transaction) error {
 		_, err := tx.Get(ref)
 		if err == nil {
-			return errors.New(fmt.Sprintf("Hash '%s' is already used", hash))
+			return errors.New(fmt.Sprintf("Link personalizado '%s' já está em uso", hash))
 		}
 
 		if status.Code(err) != codes.NotFound {

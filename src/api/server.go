@@ -21,7 +21,7 @@ func Serve() {
 	r := chi.NewRouter()
 	r.Use(middleware.DefaultLogger)
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedOrigins:   []string{"https://peq.nu/*", "http://peq.nu/*"},
 		AllowedMethods:   []string{"GET", "POST"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
