@@ -2,27 +2,23 @@ package api_shorten_bulk
 
 import (
 	"net/http"
+	"time"
 
-	api_helpers "github.com/jei-el/vuo.be-backend/src/api/helpers"
-	entities "github.com/jei-el/vuo.be-backend/src/core/domain/shorten-bulk"
-	usecases "github.com/jei-el/vuo.be-backend/src/core/domain/shorten-bulk/usecases"
-	shorten_bulk_gateway "github.com/jei-el/vuo.be-backend/src/core/ports/repositories/shorten-bulk/gateways/interfaces"
+	api_helpers "github.com/jeielmosi/peq.nu-backend/src/api/helpers"
+	entities "github.com/jeielmosi/peq.nu-backend/src/core/domain/entities/shorten-bulk"
+	usecases "github.com/jeielmosi/peq.nu-backend/src/core/domain/entities/shorten-bulk/usecases"
+	shorten_bulk "github.com/jeielmosi/peq.nu-backend/src/core/ports/repositories/shorten-bulk/interfaces"
 )
 
 type ShortenBulkService struct {
-	gateway *shorten_bulk_gateway.ShortenBulkGateway
+	repo *shorten_bulk.ShortenBulkRepository
 }
 
-func (s *ShortenBulkService) Post(url string) (map[string]interface{}, int) {
-	ans := map[string]interface{}{}
+func (s *ShortenBulkService) Post(hash string, url string) (map[string]interface{}, int) {
+	ans := make(map[string]interface{})
+	shortenBulk := entities.NewShortenBulkEntity(url, 0, true)
 
-	if url == "" {
-		return ans, http.StatusBadRequest
-	}
-
-	shortenBulk := entities.NewShortenBulkEntity(url, 0)
-
-	hash, err := usecases.Post(s.gateway, *shortenBulk)
+	hash, err := usecases.Post(s.repo, *shortenBulk, hash)
 	if err != nil {
 		ans[api_helpers.MessageField] = err.Error()
 		return ans, http.StatusInternalServerError
@@ -32,24 +28,67 @@ func (s *ShortenBulkService) Post(url string) (map[string]interface{}, int) {
 	return ans, http.StatusCreated
 }
 
-func (s *ShortenBulkService) Get(hash string) (map[string]interface{}, int) {
-	ans := map[string]interface{}{}
+func (s *ShortenBulkService) PostRandom(url string) (map[string]interface{}, int) {
+	ans := make(map[string]interface{})
+	shortenBulk := entities.NewShortenBulkEntity(url, 0, false)
 
-	if hash == "" {
-		return ans, http.StatusNotFound
-	}
-
-	shortenBulk, err := usecases.Get(s.gateway, hash)
+	hash, err := usecases.PostRandom(s.repo, *shortenBulk)
 	if err != nil {
 		ans[api_helpers.MessageField] = err.Error()
 		return ans, http.StatusInternalServerError
 	}
 
-	return usecases.ToMapInterface(shortenBulk), http.StatusOK
+	ans[api_helpers.HashField] = hash
+	return ans, http.StatusCreated
 }
 
-func NewShortenBulkService(gateway *shorten_bulk_gateway.ShortenBulkGateway) *ShortenBulkService {
+func (s *ShortenBulkService) GetStatus(hash string) (map[string]interface{}, int) {
+	ans := make(map[string]interface{})
+
+	if hash == "" {
+		return ans, http.StatusNotFound
+	}
+
+	shortenBulk, err := usecases.GetStatus(s.repo, hash)
+	if err != nil {
+		ans[api_helpers.MessageField] = err.Error()
+		return ans, http.StatusInternalServerError
+	}
+
+	flatten, err := shortenBulk.MarshalMap()
+	if err != nil {
+		ans[api_helpers.MessageField] = err.Error()
+		return ans, http.StatusInternalServerError
+	}
+
+	return flatten, http.StatusOK
+}
+
+func (s *ShortenBulkService) Get(hash string) (map[string]interface{}, int) {
+	now := time.Now()
+	ans := make(map[string]interface{})
+
+	if hash == "" {
+		return ans, http.StatusNotFound
+	}
+
+	shortenBulk, err := usecases.Get(s.repo, hash, now)
+	if err != nil {
+		ans[api_helpers.MessageField] = err.Error()
+		return ans, http.StatusInternalServerError
+	}
+
+	flatten, err := shortenBulk.MarshalMap()
+	if err != nil {
+		ans[api_helpers.MessageField] = err.Error()
+		return ans, http.StatusInternalServerError
+	}
+
+	return flatten, http.StatusOK
+}
+
+func NewShortenBulkService(repo *shorten_bulk.ShortenBulkRepository) *ShortenBulkService {
 	return &ShortenBulkService{
-		gateway,
+		repo,
 	}
 }

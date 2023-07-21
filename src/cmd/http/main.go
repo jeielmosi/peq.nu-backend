@@ -1,8 +1,8 @@
 package main
 
 import (
-	api "github.com/jei-el/vuo.be-backend/src/api"
-	config "github.com/jei-el/vuo.be-backend/src/config"
+	api "github.com/jeielmosi/peq.nu-backend/src/api"
+	config "github.com/jeielmosi/peq.nu-backend/src/config"
 )
 
 func main() {

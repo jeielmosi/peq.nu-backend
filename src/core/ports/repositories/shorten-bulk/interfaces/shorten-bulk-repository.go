@@ -3,15 +3,13 @@ package shorten_bulk
 import (
 	"time"
 
-	entities "github.com/jei-el/vuo.be-backend/src/core/domain/shorten-bulk"
-	repositories "github.com/jei-el/vuo.be-backend/src/core/ports/repositories/types"
+	types "github.com/jeielmosi/peq.nu-backend/src/core/ports/repositories/shorten-bulk/types"
 )
 
 type ShortenBulkRepository interface {
-	Get(hash string) (*repositories.RepositoryDTO[entities.ShortenBulkEntity], error)
-	GetOldest(size int) (map[string]*repositories.RepositoryDTO[entities.ShortenBulkEntity], error)
-	Post(hash string, dto repositories.RepositoryDTO[entities.ShortenBulkEntity]) error
-	IncrementClicks(hash string, updatedAt time.Time) error
-	Lock(hash string, updatedAt time.Time) error
-	Unlock(hash string, updatedAt time.Time) error
+	Get(hash string) (*types.ShortenBulkRepositoryDTO, error)
+	GetAndIncrement(hash string, updatedAt time.Time) (*types.ShortenBulkRepositoryDTO, error)
+	GetOldest(size int) (map[string]*types.ShortenBulkRepositoryDTO, error)
+	PostSafe(hash string, dto types.ShortenBulkRepositoryDTO) error
+	PostUnsafe(hash string, dto types.ShortenBulkRepositoryDTO) error
 }

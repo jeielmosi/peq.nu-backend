@@ -6,21 +6,21 @@ import (
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
-	config "github.com/jei-el/vuo.be-backend/src/config"
+	config "github.com/jeielmosi/peq.nu-backend/src/config"
 	"google.golang.org/api/option"
 )
 
-func getApp(envName string) (*firebase.App, error) {
+func getApp() (*firebase.App, error) {
 	ctx := context.Background()
 	opt := option.WithCredentialsFile(os.Getenv(config.FIREBASE_PATH))
 
 	return firebase.NewApp(ctx, nil, opt)
 }
 
-func getClient(envName string) (*firestore.Client, error, context.Context) {
+func getClient() (*firestore.Client, error, context.Context) {
 	ctx := context.Background()
 
-	app, err := getApp(envName)
+	app, err := getApp()
 	if err != nil {
 		return nil, err, ctx
 	}

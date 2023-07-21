@@ -5,8 +5,7 @@ import (
 )
 
 type RepositoryDTO[T any] struct {
-	Entity    *T
-	Locked    bool
+	Entity    T
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -16,31 +15,16 @@ func (r *RepositoryDTO[T]) Update() *RepositoryDTO[T] {
 	return &RepositoryDTO[T]{
 		Entity:    r.Entity,
 		CreatedAt: r.CreatedAt,
-		Locked:    r.Locked,
 		UpdatedAt: now,
 	}
 }
 
-func (r *RepositoryDTO[T]) LockSwitch() *RepositoryDTO[T] {
-	now := time.Now()
-	return &RepositoryDTO[T]{
-		Entity:    r.Entity,
-		CreatedAt: r.CreatedAt,
-		Locked:    !r.Locked,
-		UpdatedAt: now,
-	}
-}
-
-func NewRepositoryDTO[T any](
-	entity *T,
-	locked bool,
-) *RepositoryDTO[T] {
+func NewRepositoryDTO[T any](entity *T) *RepositoryDTO[T] {
 	now := time.Now()
 
 	return &RepositoryDTO[T]{
-		Entity:    entity,
+		Entity:    *entity,
 		CreatedAt: now,
-		Locked:    locked,
 		UpdatedAt: now,
 	}
 }

@@ -11,16 +11,17 @@ import (
 	"os"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	api_shorten_bulk "github.com/jei-el/vuo.be-backend/src/api/shorten-bulk"
-	config "github.com/jei-el/vuo.be-backend/src/config"
+	api_shorten_bulk "github.com/jeielmosi/peq.nu-backend/src/api/shorten-bulk"
+	config "github.com/jeielmosi/peq.nu-backend/src/config"
 )
 
 func Serve() {
 	r := chi.NewRouter()
+	r.Use(middleware.DefaultLogger)
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"https://*", "http://*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
@@ -32,10 +33,10 @@ func Serve() {
 
 	port := os.Getenv(config.PORT)
 	if port == "" {
-		log.Fatalf("Server port not found")
+		log.Fatalf("Server port not found\n")
 	}
 
-	log.Printf("Start server at port %s!!!", port)
+	log.Printf("Start peq.nu serverless at port %s\n", port)
 
 	port = ":" + port
 	http.ListenAndServe(port, r)

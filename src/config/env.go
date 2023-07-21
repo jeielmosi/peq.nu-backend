@@ -17,18 +17,6 @@ func getEnvPath() string {
 	rootPath := filepath.Dir(srcPath)
 	envPath := filepath.Join(rootPath, "env")
 
-	err := filepath.Walk(envPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-		log.Printf("dir: %v: name: %s\n", info.IsDir(), path)
-		return nil
-	})
-	if err != nil {
-		log.Println(err)
-	}
-
 	return envPath
 }
 

@@ -14,7 +14,11 @@ const (
 	HASH_SIZE            = 7
 )
 
-func NewRandomHash(size uint) string {
+func GenerateHash() string {
+	return RandomHash(HASH_SIZE)
+}
+
+func RandomHash(size uint) string {
 	if size == 0 {
 		return ""
 	}
